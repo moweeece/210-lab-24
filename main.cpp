@@ -147,21 +147,18 @@ int select_goat(set<Goat> trip)
     display_trip(trip);
     int userSelection;
 
-    if (userSelection < 0 || userSelection > trip.size())
-    {
-        do {
-            cout << "Select a goat --> ";
-            cin >> userSelection;
+    do {
+        cout << "Select a goat --> ";
+        cin >> userSelection;
 
-            // user entry input validation
-            if (userSelection < 0 || userSelection > trip.size())
-            {
-                cout << "Invalid entry" << endl;
-            }
+        // user entry input validation
+        if (userSelection < 0 || userSelection > trip.size())
+        {
+            cout << "Invalid entry" << endl;
+        }
 
-        } while (userSelection < 0 || userSelection > trip.size());
-
-    }
+    } while (userSelection < 0 || userSelection > trip.size());
     
+
     return userSelection - 1;  // -1 for proper indexing in the list
 }
