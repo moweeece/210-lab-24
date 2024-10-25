@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <list>
+#include <set>    // change to set for this lab
 #include <ctime> // for seeding time
 #include <cstdlib> // for randoms
 #include "Goat.h"
@@ -12,10 +12,10 @@ using namespace std;
 
 const int SZ_NAMES = 200, SZ_COLORS = 25, MAX_AGE = 20;
 
-int select_goat(list<Goat> trip);
-void delete_goat(list<Goat> &trip);
-void add_goat(list<Goat> &trip, string [], string []);
-void display_trip(list<Goat> trip);
+int select_goat(set<Goat> trip);
+void delete_goat(set<Goat> &trip);
+void add_goat(set<Goat> &trip, string [], string []);
+void display_trip(set<Goat> trip);
 int main_menu();
 
 int main() {
@@ -34,7 +34,7 @@ int main() {
     while (fin1 >> colors[i++]);
     fin1.close();
 
-    list<Goat> trip;
+    set<Goat> trip;
 
     while (again) {
 
@@ -88,21 +88,21 @@ int main_menu() {
 
 
 // function to add a goat to the trip
-void add_goat(list<Goat> &trip, string names[], string colors[])
+void add_goat(set<Goat> &trip, string names[], string colors[])
 {
     int nameIndex = rand() % SZ_NAMES;
     int randAge = rand() % MAX_AGE;
     int colorIndex = rand() % SZ_COLORS;
 
     Goat newGoat(names[nameIndex], randAge, colors[colorIndex]);
-    trip.push_back(newGoat);
+    trip.insert(newGoat);
 
     cout << "Goat added!" << endl << endl;
 }
 
 
 // function to delete a goat from the trip
-void delete_goat(list<Goat> &trip)
+void delete_goat(set<Goat> &trip)
 {
     int userDelete;
     userDelete = select_goat(trip);
@@ -118,45 +118,50 @@ void delete_goat(list<Goat> &trip)
 
 
 // function to display the current trip
-void display_trip(list<Goat> trip)
+void display_trip(set<Goat> trip)
 {
     if (trip.empty())
     {
         cout << "No goats to display!" << endl << endl;
     }
 
-    int i = 1;
-
-    // range based for loop to go through the entire list and display contents
-    for (const auto& goat : trip)
+    if (!trip.empty())
     {
-        cout << left << setw(5) << "";
-        cout << "[" << i << "] " << goat.get_name() << " (" << goat.get_age() << ", " << goat.get_color() << ")" << endl;
-        i++;
+        // range based for loop to go through the entire list and display contents
+        for (const auto& goat : trip)
+        {
+            int i = 1;
+            cout << left << setw(5) << "";
+            cout << "[" << i << "] " << goat.get_name() << " (" << goat.get_age() << ", " << goat.get_color() << ")" << endl;
+            i++;
+        }
     }
-
+    
     cout << endl;
 }
 
 
 // function to select a goat
-int select_goat(list<Goat> trip)
+int select_goat(set<Goat> trip)
 {
     display_trip(trip);
     int userSelection;
 
-    do {
-        cout << "Select a goat --> ";
-        cin >> userSelection;
+    if (userSelection < 0 || userSelection > trip.size())
+    {
+        do {
+            cout << "Select a goat --> ";
+            cin >> userSelection;
 
-        // user entry input validation
-        if (userSelection < 0 || userSelection > trip.size())
-        {
-            cout << "Invalid entry" << endl;
-        }
+            // user entry input validation
+            if (userSelection < 0 || userSelection > trip.size())
+            {
+                cout << "Invalid entry" << endl;
+            }
 
-    } while (userSelection < 0 || userSelection > trip.size());
+        } while (userSelection < 0 || userSelection > trip.size());
+
+    }
     
-
     return userSelection - 1;  // -1 for proper indexing in the list
 }
